@@ -4,11 +4,14 @@ from pymongo import MongoClient
 import time
 import web
 
-def issuance_GET(data, jwtKey, dbUser, dbPassword, dbHost, dbName):
+from auth import decide
+
+def issuance_GET(data, jwtKey, dbUser, dbPassword, dbHost, dbName, jitsiIssuer, jitsiKey):
     result = {
         "error": None,
         "token": ""
     }
+    currentTime = round(time.time())
     
     if 'uuid' in data:
         uuid = data.uuid
@@ -23,7 +26,6 @@ def issuance_GET(data, jwtKey, dbUser, dbPassword, dbHost, dbName):
             result["error"] = "User does not exist"
         else:
             tags = user["tags"]
-            currentTime = round(time.time())
             payload = {
                 "uuid": uuid,
                 "tags": tags,
@@ -35,13 +37,27 @@ def issuance_GET(data, jwtKey, dbUser, dbPassword, dbHost, dbName):
             result["token"] = jwt.encode(payload, jwtKey, 'HS256')
         client.close()
     elif 'name' in data and 'token' in data:
-        # extend token by name
+        # generate Jitsi token
         name = data.name
         token = data.token
         try:
             claims = jwt.decode(token, jwtKey, algorithms=["HS256"], options={"verify_signature": True})
-            claims["name"] = name
-            result["token"] = jwt.encode(claims, jwtKey, 'HS256')
+            isModerator = decide("jitsiModerator", claims)
+            payload = {
+                "context": {
+                    "user": {
+                        "name": name
+                    }
+                },
+                "nbf": currentTime - 10,
+                "aud": "jitsi",
+                "iss": jitsiIssuer,
+                "room": "*",
+                "moderator": isModerator,
+                "iat": currentTime,
+                "exp": currentTime + 60
+            }
+            result["token"] = jwt.encode(payload, jitsiKey, 'HS256')
         except jwt.InvalidTokenError:
             result["error"] = "The provided token is invalid"
     else:

@@ -14,6 +14,8 @@ dbPassword = getenv("DB_PASSWORD")
 dbHost = getenv("DB_HOST")
 dbName = getenv("DB_NAME")
 jwtKey = getenv("JWT_KEY")
+jitsiIssuer = getenv("JITSI_ISS")
+jitsiKey = getenv("SECRET_JITSI_KEY")
 
 # Definition of routes
 urls = (
@@ -33,7 +35,7 @@ class auth:
 # Token issuance
 class issuance:
     def GET(self):
-        return issuance_GET(web.input(), jwtKey, dbUser, dbPassword, dbHost, dbName)
+        return issuance_GET(web.input(), jwtKey, dbUser, dbPassword, dbHost, dbName, jitsiIssuer, jitsiKey)
 
 # User information
 class userinfo:
@@ -49,6 +51,8 @@ class validate:
 if __name__ == "__main__":    
     if dbUser == None or dbPassword == None or dbHost == None or dbName == None:
         print("Database information incomplete")
+    if jitsiIssuer == None or jitsiKey == None:
+        print("Jitsi information incomplete")
     
     print("Starting up sidecar")
 

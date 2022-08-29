@@ -1,6 +1,20 @@
 import json
 import jwt
 import web
+
+def decide(service, claims):
+    try:
+        rulesFile = open("rules/rules.json", "r")
+        rules = json.load(rulesFile)
+        decision = rules[service]
+        if decision == "allowed":
+            return True
+        elif decision == "moderator":
+            return claims["moderator"] == True
+        else:
+            return False
+    except (FileNotFoundError, KeyError) as err:
+        return err
  
 def auth_GET(data, jwtKey):
     response = {
@@ -15,15 +29,7 @@ def auth_GET(data, jwtKey):
             claims = jwt.decode(token, jwtKey, algorithms=["HS256"], options={"verify_signature": True})
 
             try:
-                rulesFile = open("rules/rules.json", "r")
-                rules = json.load(rulesFile)
-                decision = rules[service]
-                if decision == "allowed":
-                    response["allowed"] = True
-                elif decision == "moderator":
-                    response["allowed"] = claims["moderator"] == True
-                else:
-                    response["allowed"] = False
+                response["allowed"] = decide(service, claims)
             except FileNotFoundError:
                 web.webapi.internalerror()
                 print("No rules.json found. Did you convert the m4 file to json using m4 rules.m4 > rules.json?")

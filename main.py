@@ -56,6 +56,6 @@ if __name__ == "__main__":
     
     print("Starting up sidecar")
 
-    #web.config.debug = False
+    web.config.debug = False
     app = web.application(urls, globals())
     app.run()

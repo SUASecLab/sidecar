@@ -33,6 +33,7 @@ def auth_GET(data, jwtKey):
             except FileNotFoundError:
                 web.webapi.internalerror()
                 print("No rules.json found. Did you convert the m4 file to json using m4 rules.m4 > rules.json?")
+                response["allowed"] = False
             except KeyError:
                 web.webapi.badrequest()
                 response["allowed"] = False

@@ -23,14 +23,16 @@ RUN ln -s /usr/lib/apache2/modules/mod_wsgi.so /usr/local/apache2/modules/mod_ws
 # Copy program files
 RUN mkdir -p /usr/local/wsgi
 COPY . /usr/local/wsgi
+WORKDIR /usr/local/wsgi
+RUN make
 
 # Adjust httpd config
-RUN cat /usr/local/wsgi/config_additions.txt >> /usr/local/apache2/conf/httpd.conf
+RUN cat config_additions.txt >> /usr/local/apache2/conf/httpd.conf
 
 # Install dependencies
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r /usr/local/wsgi/requirements.txt
-RUN cd /usr/local/wsgi/sidecar_lib && pip install .
+RUN pip install --no-cache-dir -r requirements.txt
+RUN cd sidecar_lib && pip install .
 
 # Cleanup
 RUN apt-get remove wget apache2-dev m4 make -y

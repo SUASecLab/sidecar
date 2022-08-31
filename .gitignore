@@ -1,5 +1,8 @@
-# Pycache
+# Cached and intermediate files
 __pycache__
+sidecar_lib/build/
+sidecar_lib/sidecar_lib.egg-info/
+
 
 # Compiled rules
 rules/rules.json

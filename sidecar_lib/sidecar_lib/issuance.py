@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import time
 import web
 
-from auth import decide
+from sidecar_lib.auth import decide
 
 def issuance_GET(data, jwtKey, dbUser, dbPassword, dbHost, dbName, jitsiIssuer, jitsiKey):
     result = {

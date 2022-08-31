@@ -3,10 +3,10 @@ from os import getenv
 import web
 
 # Modules
-from auth import *
-from issuance import *
-from userinfo import *
-from validation import *
+from sidecar_lib.auth import *
+from sidecar_lib.issuance import *
+from sidecar_lib.userinfo import *
+from sidecar_lib.validation import *
 
 # Environment variables
 dbUser = getenv("DB_USER")

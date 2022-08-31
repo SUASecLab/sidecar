@@ -12,8 +12,11 @@ USER sidecar
 
 ENV PATH=$PATH:/home/sidecar/.local/bin
 
+RUN make
+
 RUN pip install --user --upgrade pip
 RUN pip install --no-cache-dir --user -r requirements.txt
-RUN make
+
+RUN cd sidecar_lib && pip install . && cd ..
 
 CMD ["python", "-u", "main.py"]

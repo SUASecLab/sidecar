@@ -47,15 +47,13 @@ class validate:
     def GET(self):
         return validation_GET(web.input(), jwtKey)
 
-# Start the program
-if __name__ == "__main__":    
-    if dbUser == None or dbPassword == None or dbHost == None or dbName == None:
-        print("Database information incomplete")
-    if jitsiIssuer == None or jitsiKey == None:
-        print("Jitsi information incomplete")
+# Start the program  
+if dbUser == None or dbPassword == None or dbHost == None or dbName == None:
+    print("Database information incomplete")
+if jitsiIssuer == None or jitsiKey == None:
+    print("Jitsi information incomplete")
     
-    print("Starting up sidecar")
+print("Starting up sidecar")
 
-    web.config.debug = False
-    app = web.application(urls, globals())
-    app.run()
+web.config.debug = False
+application = web.application(urls, globals()).wsgifunc()

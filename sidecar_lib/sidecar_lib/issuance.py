@@ -60,8 +60,6 @@ def issuance_GET(data, jwtKey, dbUser, dbPassword, dbHost, dbName, jitsiIssuer, 
             result["token"] = jwt.encode(payload, jitsiKey, 'HS256')
         except jwt.InvalidTokenError:
             result["error"] = "The provided token is invalid"
-        except (FileNotFoundError, KeyError):
-            result["error"] = "Could not decide if the user is a moderator"
     else:
         web.webapi.badrequest()
         result["error"] = "No UUID provided"

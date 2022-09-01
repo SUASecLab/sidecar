@@ -13,8 +13,13 @@ def decide(service, claims):
             return claims["moderator"] == True
         else:
             return False
-    except (FileNotFoundError, KeyError) as err:
-        return err
+    except FileNotFoundError:
+        web.webapi.internalerror()
+        print("No rules.json found. Did you convert the m4 file to json using m4 rules.m4 > rules.json?")
+        return False
+    except KeyError:
+        web.webapi.badrequest()
+        return False
  
 def auth_GET(data, jwtKey):
     response = {
@@ -27,16 +32,7 @@ def auth_GET(data, jwtKey):
 
         try:
             claims = jwt.decode(token, jwtKey, algorithms=["HS256"], options={"verify_signature": True})
-
-            try:
-                response["allowed"] = decide(service, claims)
-            except FileNotFoundError:
-                web.webapi.internalerror()
-                print("No rules.json found. Did you convert the m4 file to json using m4 rules.m4 > rules.json?")
-                response["allowed"] = False
-            except KeyError:
-                web.webapi.badrequest()
-                response["allowed"] = False
+            response["allowed"] = decide(service, claims)
         except jwt.InvalidTokenError:
             response["allowed"] = False
     else:

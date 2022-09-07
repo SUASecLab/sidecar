@@ -34,8 +34,8 @@ spec = APISpec(
     info=dict(
         description="This is the API documentation for the SUSecLab's sidecar. The sidecar is responsible for all security related operations in the SUASecLab, e.g. generating tokens for the users or checking if a user has the permission to do something.",
         license=dict(
-            name="GPL-2.0",
-            url="https://opensource.org/licenses/gpl-2.0.php"
+            name="GPL-3.0",
+            url="https://www.gnu.org/licenses/gpl-3.0.en.html"
         ),
         contact=dict(
             email="t.tefke@stud.fh-sm.de"

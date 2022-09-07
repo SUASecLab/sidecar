@@ -3,8 +3,8 @@ info:
     is responsible for all security related operations in the SUASecLab, e.g. generating
     tokens for the users or checking if a user has the permission to do something.
   license:
-    name: GPL-2.0
-    url: https://opensource.org/licenses/gpl-2.0.php
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
   contact:
     email: t.tefke@stud.fh-sm.de
   title: SUASecLab Sidecar

@@ -1,0 +1,189 @@
+info:
+  description: This is the API documentation for the SUSecLab's sidecar. The sidecar
+    is responsible for all security related operations in the SUASecLab, e.g. generating
+    tokens for the users or checking if a user has the permission to do something.
+  license:
+    name: GPL-2.0
+    url: https://opensource.org/licenses/gpl-2.0.php
+  contact:
+    email: t.tefke@stud.fh-sm.de
+  title: SUASecLab Sidecar
+  version: 0.0.1
+paths:
+  /auth:
+    get:
+      summary: Get auth decision
+      description: Get auth decision from the sidecar. The decision tells whether
+        the user is allowed to perform a specific operation.
+      responses:
+        '200':
+          description: Decision could be made and is being returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthDecision'
+        '400':
+          description: Decision could not be made, required parameters are (partly)
+            missing.
+    summary: Make auth decision
+    description: API call to the sidebar in order to make an auth decision.
+    parameters:
+    - $ref: '#/components/parameters/AuthRequestService'
+    - $ref: '#/components/parameters/AuthRequestToken'
+  /issuance:
+    get:
+      summary: Get JWT token
+      description: Get a JWT token for the user to authenticate her on the SUASecLab
+        or a Jitsi Meet room.
+      responses:
+        '200':
+          description: Token was issued and is being returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenIssuanceResult'
+        '400':
+          description: The request was invalid, not enough parameters specified.
+        '403':
+          description: Token could not be issued, because there exists no user having
+            the specified UUID.
+        '409':
+          description: The provided JWT token is invalid.
+    summary: Issue JWT token
+    description: This route can be used for generating a user token for the SUASecLab
+      or for receiving a token for a Jitsi Meet instance. If a token for the SUASecLab
+      should be generated, a UUID must be handed over. Otherwise, if a Jitsi Meet
+      token should be generated, an existing SUASecLab user token and a name to be
+      displayed in Jitsi must be provided.
+    parameters:
+    - $ref: '#/components/parameters/IssuanceRequestUUID'
+    - $ref: '#/components/parameters/IssuanceRequestName'
+    - $ref: '#/components/parameters/IssuanceRequestToken'
+  /userinfo:
+    get:
+      summary: Get user information
+      description: Find out whether an account exists and if the user is an admin.
+      responses:
+        '200':
+          description: The request was processed, information is being returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResult'
+        '400':
+          description: No user UUID was provided.
+    summary: Get user information
+    description: Find out whether an account exists and if the user is an admin.
+    parameters:
+    - $ref: '#/components/parameters/UserInfoUUID'
+  /validate:
+    get:
+      summary: Validate JWT tokens
+      description: Validate user JWT tokens for the SUASecLab.
+      responses:
+        '200':
+          description: The request was processed, information about the state of the
+            token is being returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResult'
+        '400':
+          description: No token was provided.
+    summary: Validate JWT tokens
+    description: Validate user JWT tokens for the SUASecLab.
+    parameters:
+    - $ref: '#/components/parameters/ValidateToken'
+openapi: 3.0.3
+components:
+  schemas:
+    AuthDecision:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+          example: true
+    TokenIssuanceResult:
+      type: object
+      properties:
+        error:
+          type: string
+          example: null
+        token:
+          type: string
+          format: JWT
+    UserInfoResult:
+      type: object
+      properties:
+        exists:
+          type: boolean
+          example: true
+        isAdmin:
+          type: boolean
+          example: true
+    ValidationResult:
+      type: object
+      properties:
+        error:
+          type: string
+          example: null
+        valid:
+          type: boolean
+          example: true
+  parameters:
+    AuthRequestService:
+      name: service
+      in: query
+      description: The service or task for which the user should be authenticated.
+      required: true
+      schema:
+        type: string
+      example: updateComponents
+    AuthRequestToken:
+      name: token
+      in: query
+      description: The JWT token of the user.
+      required: true
+      schema:
+        type: string
+        format: JWT
+    IssuanceRequestUUID:
+      name: uuid
+      in: query
+      description: The UUID to specify a user account. This must be handed over when
+        issuing a token for a SUASecLab user.
+      schema:
+        type: string
+        format: UUID
+    IssuanceRequestName:
+      name: name
+      in: query
+      description: The name of a user. Must be handed over together with a token when
+        issuing a token for a Jitsi Meet room.
+      schema:
+        type: string
+    IssuanceRequestToken:
+      name: token
+      in: query
+      description: The SUASecLab token of a user. Must be handed over together with
+        a name when issuing a token for a Jitsi Meet room.
+      schema:
+        type: string
+        format: JWT
+    UserInfoUUID:
+      name: uuid
+      in: query
+      required: true
+      description: The UUID to specify tje user account. This must be handed over
+        for receiving user information.
+      schema:
+        type: string
+        format: UUID
+    ValidateToken:
+      name: token
+      in: query
+      required: true
+      description: The SUASecLab user token of a user.
+      schema:
+        type: string
+        format: JWT

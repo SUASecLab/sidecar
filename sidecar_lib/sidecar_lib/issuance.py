@@ -25,7 +25,11 @@ def issuance_GET(data, jwtKey, dbUser, dbPassword, dbHost, dbName, jitsiIssuer, 
             web.webapi.forbidden()
             result["error"] = "User does not exist"
         else:
-            tags = user["tags"]
+            tags = None
+            if "tags" in user.keys():
+                tags = user["tags"]
+            else:
+                tags = []
             payload = {
                 "uuid": uuid,
                 "tags": tags,

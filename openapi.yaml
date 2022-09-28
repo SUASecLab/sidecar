@@ -37,7 +37,9 @@ paths:
         or a Jitsi Meet room.
       responses:
         '200':
-          description: Token was issued and is being returned.
+          description: Token was issued and is being returned. The token is an empty
+            string if a token was required for the Jitsi Meet room and exam mode is
+            enabled for that user.
           content:
             application/json:
               schema:

@@ -62,6 +62,9 @@ def issuance_GET(data, jwtKey, dbUser, dbPassword, dbHost, dbName, jitsiIssuer, 
                 "exp": currentTime + 60
             }
             result["token"] = jwt.encode(payload, jitsiKey, 'HS256')
+            if "tags" in claims:
+                if "exam" in claims["tags"]:
+                    result["token"] = ""
         except jwt.InvalidTokenError:
             result["error"] = "The provided token is invalid"
             web.webapi.conflict()

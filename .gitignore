@@ -1,0 +1,5 @@
+# Sidecar binary
+sidecar
+
+# Compiled rules
+rules/rules.json

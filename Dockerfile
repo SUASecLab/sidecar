@@ -11,6 +11,7 @@ RUN go build
 FROM scratch
 COPY --from=golang-builder /src/app/sidecar /sidecar
 COPY --from=golang-builder /etc/passwd /etc/passwd
+COPY --chown=sidecar:sidecar rules/rules.json /rules/rules.json
 
 USER sidecar
 

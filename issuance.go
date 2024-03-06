@@ -32,7 +32,7 @@ func issuance(w http.ResponseWriter, r *http.Request) {
 			result.Error = errorMessage
 			log.Println(errorMessage, err)
 		} else {
-			signedToken, err := jwt.Sign(jwt.HS256, []byte(jwtKey), map[string]interface{}{
+			signedToken, err := jwt.Sign(jwt.HS256, []byte(jitsiKey), map[string]interface{}{
 				"uuid":      user.Uuid,
 				"tags":      user.Tags,
 				"moderator": slices.Contains(user.Tags, "admin"),

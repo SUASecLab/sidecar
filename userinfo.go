@@ -16,6 +16,8 @@ func userinfo(w http.ResponseWriter, r *http.Request) {
 	/* Find matching user document */
 	uuid := r.URL.Query().Get("uuid")
 	token := r.URL.Query().Get("token")
+	log.Println("Received request: ", r.URL)
+
 	// if token is set, get uuid from token
 	if len(token) > 0 {
 		verifiedToken, err := jwt.Verify(jwt.HS256, []byte(jwtKey), []byte(token))
@@ -34,7 +36,6 @@ func userinfo(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	log.Println("Received request: ", r.URL)
 
 	var user User
 	var userinfo UserInfo

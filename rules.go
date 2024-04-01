@@ -29,7 +29,7 @@ func decide(service string, claims RulesCustomClaims) bool {
 			if rule.Value == "allowed" {
 				return true
 			} else if rule.Value == "moderator" {
-				return claims.Moderator == true
+				return claims.Moderator
 			} else {
 				return false
 			}

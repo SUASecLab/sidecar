@@ -19,11 +19,13 @@ type RulesFile struct {
 type RulesCustomClaims struct {
 	Moderator bool     `json:"moderator"`
 	Tags      []string `json:"tags"`
+	UUID      string   `json:"uuid"`
 }
 
 type UserInfo struct {
-	Exists  bool `json:"exists"`
-	IsAdmin bool `json:"isAdmin"`
+	Exists  bool   `json:"exists"`
+	IsAdmin bool   `json:"isAdmin"`
+	UUID    string `json:"uuid"`
 }
 
 type User struct {

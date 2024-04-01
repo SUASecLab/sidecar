@@ -8,12 +8,32 @@ import (
 	"net/http"
 	"slices"
 
+	"github.com/kataras/jwt"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 func userinfo(w http.ResponseWriter, r *http.Request) {
 	/* Find matching user document */
 	uuid := r.URL.Query().Get("uuid")
+	token := r.URL.Query().Get("token")
+	// if token is set, get uuid from token
+	if len(token) > 0 {
+		verifiedToken, err := jwt.Verify(jwt.HS256, []byte(jwtKey), []byte(token))
+		if err != nil {
+			log.Println(err)
+			uuid = "" // this will cause the user not to be found, returning empty data
+		} else {
+			var claims RulesCustomClaims
+			err := verifiedToken.Claims(&claims)
+
+			if err != nil {
+				log.Println(err)
+				uuid = "" // see comment above
+			} else {
+				uuid = claims.UUID
+			}
+		}
+	}
 	log.Println("Received request: ", r.URL)
 
 	var user User
@@ -24,9 +44,11 @@ func userinfo(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		userinfo.Exists = false
 		userinfo.IsAdmin = false
+		userinfo.UUID = ""
 	} else {
 		userinfo.Exists = true
 		userinfo.IsAdmin = slices.Contains(user.Tags, "admin")
+		userinfo.UUID = user.Uuid
 	}
 
 	/* Convert userinfo to JSON */

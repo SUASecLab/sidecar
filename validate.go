@@ -44,6 +44,6 @@ func validate(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		/* Print result */
-		fmt.Fprintf(w, string(decodedResult))
+		fmt.Fprint(w, string(decodedResult))
 	}
 }

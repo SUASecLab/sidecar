@@ -49,6 +49,6 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		/* Show result */
-		fmt.Fprintf(w, string(resultText))
+		fmt.Fprint(w, string(resultText))
 	}
 }

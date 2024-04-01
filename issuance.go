@@ -114,6 +114,6 @@ func issuance(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 
-		fmt.Fprintf(w, string(jsonToken))
+		fmt.Fprint(w, string(jsonToken))
 	}
 }

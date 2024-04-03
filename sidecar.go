@@ -17,6 +17,8 @@ var (
 	jwtKey      string
 	jitsiIssuer string
 	jitsiKey    string
+	jitsiUrl    string
+	jitsiId     int
 )
 
 func main() {
@@ -26,6 +28,8 @@ func main() {
 	jwtKey = os.Getenv("JWT_KEY")
 	jitsiIssuer = os.Getenv("JITSI_ISS")
 	jitsiKey = os.Getenv("SECRET_JITSI_KEY")
+	jitsiUrl = os.Getenv("JITSI_URL")
+	jitsiId = 1
 
 	/* Check if all variables are set */
 	if mongoUri == "" {
@@ -33,7 +37,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	if jwtKey == "" || jitsiIssuer == "" || jitsiKey == "" {
+	if jwtKey == "" {
+		log.Println("No jwt key set")
+		os.Exit(1)
+	}
+
+	if jitsiIssuer == "" || jitsiKey == "" || jitsiUrl == "" {
 		log.Println("Jitsi information incomplete")
 		os.Exit(1)
 	}

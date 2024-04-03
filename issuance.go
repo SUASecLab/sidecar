@@ -71,6 +71,7 @@ func issuance(w http.ResponseWriter, r *http.Request) {
 				signedToken, err := jwt.Sign(jwt.HS256, []byte(jitsiKey), map[string]interface{}{
 					"context": map[string]interface{}{
 						"user": map[string]interface{}{
+							"id":   jitsiId,
 							"name": name,
 						},
 					},
@@ -79,9 +80,12 @@ func issuance(w http.ResponseWriter, r *http.Request) {
 					"iss":       jitsiIssuer,
 					"room":      "*",
 					"moderator": isModerator,
+					"sub":       jitsiUrl,
 					"iat":       currentTime.Unix(),
 					"exp":       currentTime.Unix() + 60,
 				})
+
+				jitsiId += 1
 
 				if err != nil {
 					errorMessage := "Could not sign new token"

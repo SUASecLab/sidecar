@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"log"
 	"net/http"
 
@@ -12,6 +13,10 @@ import (
 func validate(w http.ResponseWriter, r *http.Request) {
 	/* Get token */
 	token := r.URL.Query().Get("token")
+
+	// escape
+	token = html.EscapeString(token)
+
 	result := ValidationResult{"", false}
 	log.Println("Received request: ", r.URL)
 

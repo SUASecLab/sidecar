@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html"
 	"log"
 	"net/http"
 	"slices"
@@ -16,6 +17,11 @@ func userinfo(w http.ResponseWriter, r *http.Request) {
 	/* Find matching user document */
 	uuid := r.URL.Query().Get("uuid")
 	token := r.URL.Query().Get("token")
+
+	// escape input
+	uuid = html.EscapeString(uuid)
+	token = html.EscapeString(token)
+
 	log.Println("Received request: ", r.URL)
 
 	// if token is set, get uuid from token

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"log"
 	"net/http"
 	"net/url"
@@ -21,6 +22,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	// Figure out if this is an authentication request from Traefik
 	forwardedURI := r.Header.Get("X-Forwarded-Uri")
 	if forwardedURI != "" {
+		forwardedURI = html.EscapeString(forwardedURI)
 		// Traefik request
 		log.Println("Received forwarded URI request: ", forwardedURI)
 
@@ -48,6 +50,10 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 		tokenString = r.URL.Query().Get("token")
 		service = r.URL.Query().Get("service")
 	}
+
+	// escape input
+	tokenString = html.EscapeString(tokenString)
+	service = html.EscapeString(service)
 
 	// Prepare response
 	result := AuthenticationResponse{false}

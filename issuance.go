@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html"
 	"log"
 	"net/http"
 	"slices"
@@ -17,6 +18,11 @@ func issuance(w http.ResponseWriter, r *http.Request) {
 	uuid := r.URL.Query().Get("uuid")
 	name := r.URL.Query().Get("name")
 	token := r.URL.Query().Get("token")
+
+	// escape input
+	uuid = html.EscapeString(uuid)
+	name = html.EscapeString(name)
+	token = html.EscapeString(token)
 
 	currentTime := time.Now()
 	result := IssuanceResult{"", ""}

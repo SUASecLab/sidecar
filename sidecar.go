@@ -19,6 +19,8 @@ var (
 	jitsiKey    string
 	jitsiUrl    string
 	jitsiId     int
+
+	noVNCSubdir string
 )
 
 func main() {
@@ -30,6 +32,7 @@ func main() {
 	jitsiKey = os.Getenv("SECRET_JITSI_KEY")
 	jitsiUrl = os.Getenv("JITSI_URL")
 	jitsiId = 1
+	noVNCSubdir = os.Getenv("NOVNC_SUBDIR")
 
 	/* Check if all variables are set */
 	if mongoUri == "" {
@@ -44,6 +47,11 @@ func main() {
 
 	if jitsiIssuer == "" || jitsiKey == "" || jitsiUrl == "" {
 		log.Println("Jitsi information incomplete")
+		os.Exit(1)
+	}
+
+	if noVNCSubdir == "" {
+		log.Println("No noVNC subdir set")
 		os.Exit(1)
 	}
 
@@ -68,7 +76,6 @@ func main() {
 	r.HandleFunc("/issuance", issuance).Methods("GET")
 	r.HandleFunc("/userinfo", userinfo).Methods("GET")
 	r.HandleFunc("/validate", validate).Methods("GET")
-
 	log.Println("Starting up sidecar")
 	err = http.ListenAndServe(":8080", r)
 	if err != nil {

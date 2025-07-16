@@ -41,6 +41,8 @@ func userinfo(w http.ResponseWriter, r *http.Request) {
 				uuid = claims.UUID
 			}
 		}
+	} else {
+		http.Error(w, "No token provided", http.StatusBadRequest)
 	}
 
 	var user User
